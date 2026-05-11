@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  taller-python:
+    build: .
+    container_name: taller_desarrollo_python
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/code/app
+    environment:
+      - DATABASE_URL=sqlite:///./app.db
+
+  taller-node:
+    build:
+      context: .
+      dockerfile: backend-node/Dockerfile
+    container_name: taller_desarrollo_node
+    ports:
+      - "3000:3000"
+    depends_on:
+      - taller-python
+    environment:
+      - PYTHON_API_URL=http://taller-python:8000/api/v1/parking
+    volumes:
+      - ./backend-node/data:/app/data
+
+  taller-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taller_desarrollo_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - taller-node
