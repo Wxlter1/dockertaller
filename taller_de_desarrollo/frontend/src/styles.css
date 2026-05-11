@@ -1,0 +1,182 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.app-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+header p {
+  margin: 0.75rem 0 0;
+  color: #475569;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: white;
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+}
+
+.card.section {
+  padding: 24px;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.card strong {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+  color: #475569;
+}
+
+tr:hover {
+  background: #f8fafc;
+}
+
+.available {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.occupied {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.form-grid {
+  display: grid;
+  gap: 14px;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  font: inherit;
+}
+
+input,
+select {
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+button {
+  border: none;
+  background: #1d4ed8;
+  color: white;
+  border-radius: 14px;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #1e40af;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.map-container {
+  margin-top: 16px;
+}
+
+.map-container h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.campus-map {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.legend {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.legend h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.legend-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+}
+

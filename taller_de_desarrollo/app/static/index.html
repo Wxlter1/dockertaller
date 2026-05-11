@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Estacionamientos UBB</title>
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; margin: 0; padding: 0; background: #f5f7fb; color: #111827; }
+    header { background: #1e40af; color: white; padding: 1rem; text-align: center; }
+    main { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .card { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 1rem; box-shadow: 0 2px 10px rgba(15, 23, 42, .06); }
+    .status-occupied { color: #dc2626; font-weight: 700; }
+    .status-available { color: #16a34a; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+    th { font-size: 0.95rem; color: #374151; }
+    button { background: #1e40af; color: white; border: none; padding: 0.75rem 1.25rem; border-radius: 10px; cursor: pointer; }
+    button:hover { background: #0f172a; }
+    .form-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .form-row input, .form-row select { flex: 1 1 160px; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 12px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+    .meta .stat { flex: 1; min-width: 160px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Gestión de Estacionamientos UBB</h1>
+    <p>Panel de estado en tiempo real con detección vehicular</p>
+  </header>
+  <main>
+    <section class="meta">
+      <div class="card stat">
+        <h2>Total de plazas</h2>
+        <p id="total-spots">0</p>
+      </div>
+      <div class="card stat">
+        <h2>Ocupadas</h2>
+        <p id="occupied-count">0</p>
+      </div>
+      <div class="card stat">
+        <h2>Disponibles</h2>
+        <p id="available-count">0</p>
+      </div>
+      <div class="card stat">
+        <h2>Última actualización</h2>
+        <p id="last-updated">-</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Estado por sector</h2>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Sector</th>
+              <th>Estado</th>
+              <th>Confianza</th>
+              <th>Última detección</th>
+            </tr>
+          </thead>
+          <tbody id="spots-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Simular detección (prueba rápida)</h2>
+      <form id="detection-form">
+        <div class="form-row">
+          <input type="text" id="spot_code" placeholder="Código de plaza (ej. A1)" required />
+          <input type="text" id="name" placeholder="Nombre o sector" required />
+          <select id="status" required>
+            <option value="available">Disponible</option>
+            <option value="occupied">Ocupado</option>
+          </select>
+          <input type="number" id="confidence" placeholder="Confianza 0-1" step="0.05" min="0" max="1" />
+        </div>
+        <button type="submit">Enviar detección</button>
+      </form>
+      <p>El frontend muestra el estado de las plazas y se actualiza cada 3 segundos.</p>
+    </section>
+  </main>
+  <script>
+    const statusClass = status => status === 'occupied' ? 'status-occupied' : 'status-available';
+
+    async function loadSummary() {
+      const response = await fetch('/api/v1/parking/summary');
+      const summary = await response.json();
+      document.getElementById('total-spots').textContent = summary.total_spots;
+      document.getElementById('occupied-count').textContent = summary.occupied_count;
+      document.getElementById('available-count').textContent = summary.available_count;
+      document.getElementById('last-updated').textContent = summary.last_updated ? new Date(summary.last_updated).toLocaleString() : '-';
+    }
+
+    async function loadSpots() {
+      const response = await fetch('/api/v1/parking/status');
+      const spots = await response.json();
+      const table = document.getElementById('spots-table');
+      table.innerHTML = spots.map(spot => {
+        return `
+          <tr>
+            <td>${spot.spot_code}</td>
+            <td>${spot.name}</td>
+            <td class="${statusClass(spot.status)}">${spot.status}</td>
+            <td>${spot.confidence !== null ? spot.confidence.toFixed(2) : '-'}</td>
+            <td>${spot.last_seen ? new Date(spot.last_seen).toLocaleString() : '-'}</td>
+          </tr>`;
+      }).join('');
+    }
+
+    async function refresh() {
+      await Promise.all([loadSummary(), loadSpots()]);
+    }
+
+    document.getElementById('detection-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const payload = {
+        spot_code: document.getElementById('spot_code').value,
+        name: document.getElementById('name').value,
+        status: document.getElementById('status').value,
+        confidence: parseFloat(document.getElementById('confidence').value) || null,
+      };
+      await fetch('/api/v1/parking/detections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      document.getElementById('detection-form').reset();
+      await refresh();
+    });
+
+    refresh();
+    setInterval(refresh, 3000);
+  </script>
+</body>
+</html>
