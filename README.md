@@ -1,4 +1,4 @@
-# Taller de Desarrollo para Propuesta de Título
+# Taller de Desarrollo
 
 Plantilla de proyecto basada en FastAPI, diseñada para cumplir una propuesta de título con los criterios típicos de: estructura modular, documentación automática, pruebas, persistencia y despliegue en contenedores.
 
@@ -115,13 +115,3 @@ export class MiEntidad {
 
 2. Agregar a `backend-node/src/config/database.ts` en el array `entities`
 3. Compilar y reiniciar: `npm run build && npm start`
-
-## Propuesta de título y justificación
-
-Esta plantilla es adecuada para un informe de propuesta de título porque:
-
-- separa presentación, negocio y datos en capas claras;
-- utiliza documentación automática de FastAPI para describir la API;
-- incluye un ejemplo CRUD completo con validación y manejo de errores;
-- permite desplegar en contenedores para entornos de producción;
-- ofrece una base clara para agregar nuevas entidades y requerimientos.
