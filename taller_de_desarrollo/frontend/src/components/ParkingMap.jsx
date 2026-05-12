@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 
 function ParkingMap({ spots, summary }) {
+  const apiBaseUrl = import.meta.env.VITE_API_URL || '';
   const [sectors, setSectors] = useState([]);
 
   useEffect(() => {
     const loadSectors = async () => {
-      const res = await fetch('/api/parking/sectors/summary');
+      const res = await fetch(`${apiBaseUrl}/sectors/summary`);
       setSectors(await res.json());
     };
     loadSectors();

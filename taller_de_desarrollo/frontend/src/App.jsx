@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import ParkingMap from './components/ParkingMap';
 
-
 const STATUS_LABEL = {
   occupied: 'Ocupado',
   available: 'Disponible',
@@ -12,18 +11,19 @@ function formatDate(datetime) {
 }
 
 function App() {
+  const apiBaseUrl = import.meta.env.VITE_API_URL || '';
   const [spots, setSpots] = useState([]);
   const [summary, setSummary] = useState({ total_spots: 0, occupied_count: 0, available_count: 0, last_updated: null });
   const [form, setForm] = useState({ spot_code: '', name: '', status: 'available', confidence: 0.9 });
   const [saving, setSaving] = useState(false);
 
   const loadSummary = async () => {
-    const res = await fetch('/api/parking/summary');
+    const res = await fetch(`${apiBaseUrl}/summary`);
     setSummary(await res.json());
   };
 
   const loadSpots = async () => {
-    const res = await fetch('/api/parking/status');
+    const res = await fetch(`${apiBaseUrl}/status`);
     setSpots(await res.json());
   };
 
@@ -40,7 +40,7 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSaving(true);
-    await fetch('/api/parking/detections', {
+    await fetch(`${apiBaseUrl}/detections`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),

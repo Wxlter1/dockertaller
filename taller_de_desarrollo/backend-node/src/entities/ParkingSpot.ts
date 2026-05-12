@@ -25,7 +25,7 @@ export class ParkingSpot {
   @Column({ type: 'float', nullable: true })
   confidence?: number | null;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   last_seen?: Date | null;
 
   @CreateDateColumn()
