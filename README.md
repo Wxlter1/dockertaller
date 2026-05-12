@@ -6,9 +6,12 @@
 docker compose up --build
 ```
 
+- React UI: `http://localhost:5173`
+- Node API: `http://localhost:3000`
 - Python FastAPI: `http://localhost:8000`
-- React + Node UI: `http://localhost:3000`
 - Documentación FastAPI: `http://localhost:8000/docs`
+
+El repositorio incluye `docker-compose.yml` en la raíz y `.env.example` con las variables necesarias.
 
 ### Opción local para desarrollo
 

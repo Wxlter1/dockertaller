@@ -1,0 +1,13 @@
+.env
+
+# Node / React
+**/node_modules/
+**/dist/
+**/data/
+
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
